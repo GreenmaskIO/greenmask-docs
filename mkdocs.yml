@@ -68,7 +68,7 @@ nav:
           - SetNull: built_in_transformers/set_null.md
           - Template: built_in_transformers/template.md
           - TemplateRecord: built_in_transformers/template_record.md
-      - Template functions and hints: template.md
+      - Template functions and hints: template_functions.md
       - Custom transformers: custom-transformers.md
 
 repo_url: https://github.com/GreenmaskIO/greenmask
