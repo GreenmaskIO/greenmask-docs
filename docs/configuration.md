@@ -1,44 +1,51 @@
 # Configuration
 
-The configuration is divided into 6 sections:
+The configuration is organized into six sections:
 
-* **common** - setting that can be used either for `dump` or `restore` command
-* **log** - setting for logging subsystem
-* **storage** - setting for storages where dumps is going to be stored. Currently available - S3 and Directory
-* **dump** - setting for dump command. Contains pg_dump options and transformation
-* **restore** - setting for restore option. Contains pg_restore opting and additional restoration scripts
-* **custom_transformers** - definition of custom transformers that interact via (stdin-stdout). Once the custom
-  transformer has been connected it will be also available via `greenmask list-transformers`
+* **common** - Settings that can be utilized for both the `dump` and `restore` commands.
+* **log** - Configuration for the logging subsystem.
+* **storage** - Configuration for the storage locations where dumps are stored
+* **dump** - Configuration for the dump command. This section includes pg_dump options and transformation settings.
+* **restore** - Configuration for the restore command. It contains pg_restore options and additional restoration
+  scripts.
+* **custom_transformers** - Definitions of custom transformers that interact through stdin and stdout. Once a custom
+  transformer is configured, it becomes accessible via the `greenmask list-transformers` command.
 
 ## common
 
-* **pg_bin_path** - path to the PostgreSQL binaries. Note - the PostgreSQL server must be the same version as a
-  provided binaries
-* **tmp_dir** - temporal directory for storing TOC file.
+* **pg_bin_path** - Path to the PostgreSQL binaries. Note that the PostgreSQL server version must match the provided
+  binaries.
+* **tmp_dir** - Temporary directory for storing the TOC (Table of Contents) fi
 
 !!! note
 
-    Greenmask controls only data dumping and data restoration and delegates schema dumping to pg_dump util and schema 
-    restoration to pg_restore util. Both pg_dump and pg_restore require toc.dat file in some directory that contains 
-    metadata and object definition. According to that tmp_dir parameter is required for storing `toc.dat` file during 
-    the dumping or restoration procedure. All the artifacts will be deleted once the command is completed.
+    Greenmask exclusively manages data dumping and data restoration processes, delegating schema dumping to the 
+    `pg_dump `utility and schema restoration to the `pg_restore` utility. Both `pg_dump` and `pg_restore` rely on a 
+    toc.dat file located in a specific directory, which contains metadata and object definitions. Therefore, 
+    the `tmp_dir` parameter is essential for storing the toc.dat file during the dumping or restoration procedure. It's 
+    important to note that all artifacts in this directory will be automatically deleted once the Greenmask 
+    command is completed.
 
 ## log
 
-* **level** - level of logging. Can be one of - debug, info, or error. Default is info.
-* **format** - logging format. Can be one of - json or text. The default is text.
+The log section of the configuration allows you to specify the following settings:
+
+* **level** - Specifies the level of logging, which can be one of the following: debug, info, or error. The default
+  level is info.
+* **format** - Defines the logging format, which can be either json or text. The default format is text.
 
 ## storage
 
-Setup storage driver for storing the dumped data. Currently supported storages - **directory** and **S3**.
+The storage section enables you to configure the storage driver for storing the dumped data. Currently,
+two storage options are supported: **directory** and **s3**.
 
 ### directory
 
-Filesystem directory where dump will be stored.
+Directory storage refers to a filesystem directory where the dump data will be stored.
 
 Parameters:
 
-* **path** - path to the directory where dumps is going to be stored
+* **path** - Specifies the path to the directory where the dumps will be stored on the filesystem.
 
 ``` yaml title="direcroty storage config example"
 directory:
@@ -47,31 +54,28 @@ directory:
 
 ### s3
 
-S3-like remote storage. It might be azure, amazon S3, and so on.
+The S3 storage configuration in Greenmask allows you to store dump data in an S3-like remote storage service,
+such as Amazon S3 or Azure Blob Storage. Here are the parameters you can configure for S3 storage:
 
-Parameters:
-
-* **endpoint** - override default AWS endpoint to custom for using it in requests
-* **bucket** - the name of the bucket where dump is going to be stored
-* **prefix** - prefix for objects in the bucket in path format
-* **region** - region of the service
-* **storage_class** - storage class for performing objects requests
-* **disable_ssl** - disable SSL in the interaction - default false
-* **access_key_id** - access key
-* **secret_access_key** - secret access key
-* **session_token** - session token
-* **role_arn** - amazon resources name
-* **session_name** - role session name to uniquely identify a session when the same role is assumed by different
-  principals or for different reasons.
-* **max_retries** - count of retries on the failure of the request
-* **cert_file** - path to the SSL cert for performing the requests
-* **max_part_size** - max part length for one request
-* **concurrency** - the number of goroutines to spin up in parallel per call to Upload when sending parts
-* **use_list_objects_v1** - Use old v1 ListObjects request instead of v2
-* **force_path_style** - force the request to use path-style addressing, i.e., `http://s3.amazonaws.com/BUCKET/KEY`.
-  By default, the S3 client will use virtual hosted bucket addressing when
-  possible (`http://BUCKET.s3.amazonaws.com/KEY`).
-* **use_accelerate** - enable S3 Accelerate feature
+* **endpoint** - Override the default AWS endpoint to a custom one for making requests.
+* **bucket** - The name of the bucket where the dump data will be stored.
+* **prefix** - A prefix for objects in the bucket, specified in path format.
+* **region** - The region of the S3 service.
+* **storage_class** - The storage class for performing object requests.
+* **disable_ssl** - Disable SSL for interactions (default is false).
+* **access_key_id** - Access key for authentication.
+* **secret_access_key** - Secret access key for authentication.
+* **session_token** - Session token for authentication.
+* **role_arn** - Amazon resource name for role-based authentication.
+* **session_name** - Role session name to uniquely identify a session.
+* **max_retries** - The number of retries on request failures.
+* **cert_file** - Path to the SSL certificate for making requests.
+* **max_part_size** - Maximum part length for one request.
+* **concurrency** - The number of goroutines to use in parallel for each Upload call when sending parts.
+* **use_list_objects_v1** - Use the old v1 ListObjects request instead of v2.
+* **force_path_style** - Force the request to use path-style addressing (e.g., `http://s3.amazonaws.com/BUCKET/KEY`)
+  instead of virtual hosted bucket addressing (e.g., `http://BUCKET.s3.amazonaws.com/KEY`).
+* **use_accelerate** - Enable S3 Accelerate feature.
 
 ``` yaml title="s3 storage config eample for Minio runned in the Docker"
 s3:
@@ -82,70 +86,68 @@ s3:
   secret_access_key: "zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG"
 ```
 
-!!! warning
-
-    Greenmask is beta in early access and cannot guarantee that all the S3-like storages will be working properly. 
-    Please create a feature request for your storage if you think it's popular and worthy. If any bug or lack of 
-    setting will be found do not hesitate to create an Issue in GitHub
-
 ## dump
 
-Section for `greenmask dump` command. Contains pg_dump parameters and transformation config.
+The dump command section in the Greenmask configuration file is used to configure parameters for the `greenmask dump`
+command. It includes the following parameters:
 
-Parameters:
+* **pg_dump_options** - A map of pg_dump options. These options are used for configuring the behavior of the
+  underlying [pg_dump command](commands.md#dump). You can refer to the list of supported pg_dump options in the
+  Greenmask dump command documentation.
+* **transformation** - This section contains configuration for applying transformations to table columns during the
+  dump operation. It includes the following sub-parameters:
 
-* **pg_dump_options** - map of pg_dump options. See list of the supported pg_dump option
-  in [greenmask dump command](commands.md#dump)
-* **transformation** - contains tables and a list of transformers that apply a transformation on the column value:
-
-    * **schema** - table schema name
-    * **name** - table name
-    * **query** - overridden query for COPY command. By default, the whole table is dumped. Use this parameter if
-      you want to set a custom query.
+    * **schema** - The schema name of the table.
+    * **name** - The name of the table.
+    * **query** - An optional parameter for specifying a custom query to be used in the COPY command. By default,
+      the entire table is dumped, but you can use this parameter to set a custom query.
 
         !!! warning
 
-            Be careful with **query**  it may cause constraint violation errors during restoration. 
-            Greenmask currently cannot handle a query validation
+            Be cautious when using the query parameter, as it may lead to constraint violation errors during 
+            restoration, and Greenmask currently cannot handle query validation.
 
-    * **columns_type_override** - Column type override. An associate  column with another type that supports your
-      transformer. Most of the greenmask
-      transformers work strictly with listed types of columns. If you know that column value contains laterally the
-      same
-      value as the transformer-supported type, then you can explicitly override it. For instance, post_code is a TEXT
-      value, but `RandomInt` transformer works only with INT family types, then you can override it
+    * **columns_type_override** - Allows you to override the column types explicitly. You can associate a column
+      with another type that is supported by your transformer. This is useful when the transformer works strictly with
+      specific types of columns. For example, if a column named `post_code` is of type TEXT, but the RandomInt
+      transformer works only with INT family types, you can override it as shown in the example provided.
       ``` yaml title="column type overriden example"
         columns_type_override:
           post_code: "int4"  # (1)
       ```
       { .annotate }
 
-           1. override post_code column type to int4 (INTEGER)
-  
-    * **apply_for_inherited** - apply for the same transformation for all partitions if the table is partitioned.
-      In this case, you do not need to define transformation for each partition manually.
+           1. Change the data type of the post_code column to INT4 (INTEGER).
+
+    * **apply_for_inherited** - An optional parameter to apply the same transformation to all partitions if the table
+      is partitioned. This can save you from defining the transformation for each partition manually.
 
         !!! warning
 
-            It is recommented to use `load-via-partition-root` parameter because partition key value might be changed.
+            It is recommended to use the `--load-via-partition-root` parameter when dealing with partitioned tables, 
+            as the partition key value might change.
 
-    * **transformers** - list of transformers on the table with provided parameters:
-      ``` yaml title="transformers config example"
-         transformers:
-          - name: "RandomDate"
-            params:
-              min: "2023-01-01 00:00:00.0+03"
-              max: "2023-01-02 00:00:00.0+03"
-              column: "scheduled_departure"
+    * **transformers** - A list of transformers to apply to the table, along with their parameters. Each transformation
+      item includes the following sub-parameters:
 
-          - name: "NoiseDate"
-            params:
-              ratio: "01:00:00"
-              column: "scheduled_arrival"
-      ```
-      Each transformation item contains:
-        * **name** - transformer name
-        * **parameters** - map of the provided transformer parameter
+        * **name** - The name of the transformer.
+        * **params** - A map of the provided transformer parameters.
+
+    ``` yaml title="transformers config example"
+       transformers:
+        - name: "RandomDate"
+          params:
+            min: "2023-01-01 00:00:00.0+03"
+            max: "2023-01-02 00:00:00.0+03"
+            column: "scheduled_departure"
+
+        - name: "NoiseDate"
+          params:
+            ratio: "01:00:00"
+            column: "scheduled_arrival"
+    ```
+
+Here is an example configuration for the **dump** section:
 
 ``` yaml title="example dump section config"
 dump:
@@ -207,14 +209,15 @@ dump:
 ```
 { .annotate }
 
-1. override **post_code** column type to int4 (INTEGER). Since **post_code** column has a **TEXT** type but contains
-   int like value we would override the type explicitly and apply a transformer that works with INT, for instance
-   **RandomInt**
+1. Override the **post_code** column type to **int4 (INTEGER)**. This is necessary because the **post_code** column
+   originally has a TEXT type, but it contains values that resemble integers. By explicitly overriding the type
+   to **int4**, we ensure compatibility with transformers that work with integer types, such as **RandomInt**.
 2. After the type is overridden we can apply a compatible transformer
 
 ## validate
 
-Section for `greenmask validate` command
+The **validate** section in the configuration file is used to specify parameters for the `greenmask validate`
+command. Here is an example of the validate section configuration:
 
 ```yaml title="example of validate section config"
 validate:
@@ -224,53 +227,62 @@ validate:
   data: true # (2)
   diff: true # (3)
   rows_limit: 10 # (4)
-  resolved_warnings:  # (5)
+  resolved_warnings: # (5)
     - "8d436fae67b2b82b36bd3afeb0c93f30"
   format: "horizontal" # (6)
 ```
 { .annotate }
 
-1. list of tables to validate. If not empty only for listed tables the validate operation will be performed. The table
-   might be written (`public.cart`) with schema or without (`orders`)
-2. perform data transformation for the limited rows set. The limit by default is 10 but may be changed via `rows_limit`
-   parameter
-3. perform diff operations for the transformed data. See details in [validate command](commands.md/#validate)
-4. limit the rows for transformation. The default is `10`
-5. hash list of the resolved warnings
-6. format of transformation output. Possible values `[horizontal|vertical]` Default is `horizontal`. See details
-   in [validate command](commands.md/#validate)
-
+1. A list of tables to validate. If this list is not empty, the validation operation will only be performed for
+   the specified tables. Tables can be written with or without the schema name (e.g., **"public.cart"** or
+   **"orders"**).
+2. Specifies whether to perform data transformation for a limited set of rows. If set to true, data transformation
+   will be performed, and the number of rows transformed will be limited to the value specified in the `rows_limit`
+   parameter (default is 10).
+3. Specifies whether to perform diff operations for the transformed data. If set to `true`, the validation process
+   will **find the differences between the original and transformed data**. More details can be found in the validate
+   [command documentation](commands.md/#validate).
+4. Limits the number of rows to be transformed during validation. The default limit is `10` rows, but you can change
+   it by modifying this parameter.
+5. A hash list of resolved warnings. These warnings have been addressed and resolved in a previous validation run.
+6. Specifies the format of the transformation output. Possible values are `[horizontal|vertical]`. The default format
+   is `horizontal`. You can choose the format that suits your needs. More details can be found in the [validate
+   command documentation](commands.md/#validate).
 
 ## restore
 
-Restoration config section. Contains pg_restore setting and custom scripts execution
+The *restore* section in the configuration file is used to specify parameters for the `greenmask restore` command.
+It contains `pg_restore` settings and custom script execution settings. Here are the available parameters:
 
 Parameters:
 
-* **pg_restore_options** - map of pg_dump options. See list of the supported pg_dump option
-  in [greenmask dump command](commands.md/#restore)
-* **scripts** - map of scripts executed one by one in assigned restoration stage
-  * **[pre-data|data|post-data]** - name of the stage when execute
-    * **name** - of the script
-    * **when** - condition when execute the command. Might be **before** or **after**
-    * **query** - SQL query string
-    * **query_file** - SQL query file path
-    * **command** - command with parameters. Provided as a list where the first item is command name
+* **pg_restore_options** - A map of pg_restore options. These options are used to configure the behavior of
+  the pg_restore utility during the restoration process. You can refer to the list of supported pg_restore options
+  in the [greenmask restore command documentation]().
+* **scripts** - A map of custom scripts to be executed during different restoration stages. Each script is
+  associated with a specific restoration stage and includes the following attributes:
+    * **[pre-data|data|post-data]** - The name of the restoration stage when the script should be executed.
+        * **name** - The name of the script.
+        * **when** - Specifies when to execute the script, which can be either **"before"** or **"after"** the
+          specified restoration stage.
+        * **query** - An SQL query string to be executed.
+        * **query_file** - The path to an SQL query file to be executed.
+        * **command** - A command with parameters to be executed. It is provided as a list, where the first item is the
+          command name.
 
-As was described in [Architecture](architecture.md/#backing-up) a backup contains three section - pre-data, data and
-post-data. For customization purposes and controlling the restoration process Greenmask introduce custom script
-execution that might be applied in some stages.
+As mentioned in [the architecture](architecture.md/#backing-up), a backup contains three sections: pre-data, data,
+and post-data. The custom script execution allows you to customize and control the restoration process by executing
+scripts or commands at specific stages. The available restoration stages and their corresponding execution conditions
+are as follows:
 
-Restoration stages list when SQL script or command might be executed:
+* **pre-data** - Scripts or commands can be executed before or after restoring the pre-data section.
+* **data** - Scripts or commands can be executed before or after restoring the data section.
+* **post-data** - Scripts or commands can be executed before or after restoring the post-data section.
 
-* **pre-data** - execute before or after restoring pre-data section
-* **data** - execute before or after restoring data section
-* **post-data** - execute before or after restoring post-data section
+Each stage can have a **"when"** condition with possible values:
 
-Each stage has a when condition with possible values:
-
-* **before** - execute script/sql-command before mentioned stage
-* **after** - execute script/sql-command after mentioned stage
+* **before** - Execute the script or SQL command before the mentioned restoration stage.
+* **after** - Execute the script or SQL command after the mentioned restoration stage.
 
 ``` yaml title="scripts definition example"
 scripts:
@@ -307,7 +319,13 @@ scripts:
 ```
 { .annotate }
 
-1. list of pre-data stage scripts
-2. list of data stage scripts
-3. list of post-data stage scripts
-4. command in the first argument and the parameters in the rest of the list
+1. **List of pre-data stage scripts:** This section contains scripts that are executed before or after the restoration of 
+   the pre-data section. The scripts include SQL queries and query files.
+2. **List of data stage scripts**: This section contains scripts that are executed before or after the restoration of the 
+   data section. The scripts include shell commands with parameters and SQL query files.
+3. **List of post-data stage scripts**: This section contains scripts that are executed before or after the restoration 
+   of the post-data section. The scripts include SQL queries and query files.
+4. **Command in the first argument and the parameters in the rest of the list**: When specifying a command to be 
+   executed in the scripts section, you provide the command name as the first item in a list, followed by any 
+   parameters or arguments for that command. The command and its parameters are provided as a list within the 
+   script configuration.

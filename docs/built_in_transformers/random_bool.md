@@ -1,20 +1,28 @@
-### Description
+Generate random boolean values.
 
-Generate random bool value.
+## Parameters
 
-Parameters:
+| Name      | Description                                                                  | Default | Required | Supported DB types |
+|-----------|------------------------------------------------------------------------------|---------|----------|--------------------|
+| column    | The name of the column whose value will be affected                          |         | Yes      | bool               |
+| keep_null | Indicates whether NULL values should not be replaced with transformed values | `true`  | No       | -                  |
 
-| Name      | Description                                            | Default | Required | Supported DB types |
-|-----------|--------------------------------------------------------|---------|----------|--------------------|
-| column    | name of the column which value is going to be affected |         | Yes      | bool               |
-| keep_null | do not replace NULL values to random value             | `true`  | No       | -                  |
+## Description
+
+The RandomBool transformer generates a random boolean value. The behavior for `NULL` values can be
+configured using the `keep_null` parameter.
+
+## Examples
+
+### A. Generate a Random Boolean for Salaried Flag
+
+In this example, the `RandomBool` transformer generates a random boolean value for the `salariedflag` column.
 
 ``` yaml title="RandomBool transformer example"
-- schema: "public"
-  name: "order"
+- schema: "humanresources"
+  name: "employee"
   transformers:
     - name: "RandomBool"
       params:
-        column: "is_active"
-        keep_null: false
+        column: "salariedflag"
 ```

@@ -1,32 +1,41 @@
-### Description
+Add or subtract a random fraction to the original int value.
 
-Multiply the int value by the provided random value that is not higher than `ratio` parameter and add it to the
-original value.
+## Parameters
 
-Example:
+| Name   | Description                                                      | Default | Required | Supported DB types |
+|--------|------------------------------------------------------------------|---------|----------|--------------------|
+| column | The name of the column whose value will be affected              |         | Yes      | int2, int4, int8   |
+| ratio  | The maximum random percentage for noise in value from `0` to `1` |         | Yes      | -                  |
 
-* Original: `100`
-* Ratio: `0.1`
-* Generated random value during execution: `0.05`
+## Description
 
-Transformation result: `100 + (100 * 0.05) = 105`  (1)
-{ .annotate }
+The `NoiseInt` transformer multiplies the original integer value by a provided random value that is not higher than the
+`ratio` parameter and adds it to the original value.
 
-1. The multiplied value might be either added or subtracted `100 - (100 * 0.05) = 95`
+**Example**:
 
-Parameters:
+Original Value: `100`
 
-| Name   | Description                                                                   | Default | Required | Supported DB types |
-|--------|-------------------------------------------------------------------------------|---------|----------|--------------------|
-| column | name of column which value is going to be affected                            |         | Yes      | int2, int4, int8   |
-| ratio  | max random percentage for noise. Example: `0.1` (meaning add noise up to 10%) |         | Yes      | -                  |
+Ratio: `0.1` (meaning add noise up to 10%)
+
+Generated random value during execution: `0.05`
+
+Transformation Result: `100 + (100 * 0.05) = 105`
+
+The multiplied value might be either **added or subtracted**, resulting in `100 - (100 * 0.05) = 95`.
+
+## Examples
+
+### A. Noise Vocational Hours of Employee
+
+In this example, the original value of `vacationhours` will be noised up to `50%`.
 
 ``` yaml title="NoiseInt transformer example"
-- schema: "public"
-  name: "order"
+- schema: "humanresources"
+  name: "employee"
   transformers:
     - name: "NoiseInt"
       params:
-        column: "amount"
-        ratio: 0.1
+        column: "vacationhours"
+        ratio: 0.4
 ```

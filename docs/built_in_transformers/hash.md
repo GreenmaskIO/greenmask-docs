@@ -1,20 +1,31 @@
-### Description
+Generate a hash of the text value using the `Scrypt` hash function under the hood. `NULL` values are kept.
 
-Generate the hash of the text value using the Scrypt hash function under the hood. Null values are kept.
+## Parameters
 
-Parameters:
+| Name   | Description                                                                   | Default | Required | Supported DB types |
+|--------|-------------------------------------------------------------------------------|---------|----------|--------------------|
+| column | The name of the column whose value will be affected                           |         | Yes      | text, varchar      |
+| salt   | Salt for hash function, base64 encoded. By default, it is generated randomly. |         | No       | -                  |
 
-| Name   | Description                                                                    | Default | Required | Supported DB types |
-|--------|--------------------------------------------------------------------------------|---------|----------|--------------------|
-| column | name of column which value is going to be affected                             |         | Yes      | text, varchar      |
-| salt   | random salt for hash function as a text string. By default generates randomly. |         | No       | -                  |
+## Examples
+
+### A. Generate hash from job title
+
+This example generates a hash from the `jobtitle` using the encoded string `"12345678"` into base64
+`Zpmfe8F+LVMKjXiKEP2P8WfMW3aXlwilQftu1mOLESg=`.
 
 ``` yaml title="Hash transformer example"
-- schema: "bookings"
-  name: "booking"
+- schema: "humanresources"
+  name: "employee"
   transformers:
     - name: "Hash"
       params:
-        column: "name"
-        salt: "12345678"
+        column: "jobtitle"
+        salt: 12345678
 ```
+
+Expected results:
+
+| column name | original value           | transformed                                  |
+|-------------|--------------------------|----------------------------------------------|
+| jobtitle    | Research and Development | Zpmfe8F+LVMKjXiKEP2P8WfMW3aXlwilQftu1mOLESg= |

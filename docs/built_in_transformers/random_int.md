@@ -1,24 +1,39 @@
-### Description
+Generate a random integer within the provided interval.
 
-Generate a random int in the provided interval
+## Parameters
 
-Parameters:
+| Name      | Description                                                                            | Default | Required | Supported DB types                                  |
+|-----------|----------------------------------------------------------------------------------------|---------|----------|-----------------------------------------------------|
+| column    | The name of the column whose value will be affected                                    |         | Yes      | int2 (smallint), int4 (int), int8 (bigint), numeric |
+| min       | The minimum threshold for the random value. The value range depends on the column type |         | Yes      | -                                                   |
+| max       | The maximum threshold for the random value. The value range depends on the column type |         | Yes      | -                                                   |
+| keep_null | Indicates whether NULL values should not be replaced with transformed values           | `true`  | No       | -                                                   |
 
-| Name      | Description                                                               | Default | Required | Supported DB types |
-|-----------|---------------------------------------------------------------------------|---------|----------|--------------------|
-| column    | name of column which value is going to be affected                        |         | Yes      | int2, int4, int8   |
-| min       | min int threshold of random value. The value range depends on column type |         | Yes      | -                  |
-| max       | max int threshold of random value. The value range depends on column type |         | Yes      | -                  |
-| keep_null | do not replace NULL values to random value                                | `true`  | No       | -                  |
+## Description
+
+The `RandomInt` transformer generates a random integer within the specified `min` and `max` thresholds. The behavior
+for `NULL` values can be configured using the `keep_null` parameter.
+
+## Examples
+
+### A. Generate Random Item Quantity
+
+In this example, the `RandomInt` transformer generates a random value in the range from `1` to `30` and assigns it to
+the `orderqty` colum
 
 ``` yaml title="RandomInt transformer example"
-- schema: "public"
-  name: "order"
+- schema: "sales"
+  name: "salesorderdetail"
   transformers:
     - name: "RandomInt"
       params:
-        column: "amount"
-        keep_null: true
+        column: "orderqty"
         min: 1
-        max: 100
+        max: 30
 ```
+
+Expected results:
+
+| column name | original value | transformed |
+|-------------|----------------|-------------|
+| orderqty    | 1              | 8           |

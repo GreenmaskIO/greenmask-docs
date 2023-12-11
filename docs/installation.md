@@ -1,17 +1,28 @@
-# Installation 
-
-## Installation
+# Installation
 
 **Requirements**:
 
-* Preinstalled PostgreSQL utils with **the same major** version as a destination server
-* `make` utility if building from source
+* Ensure that you have PostgreSQL utilities preinstalled on your system, with the same **major version**
+  as your destination server.
 
-From source:
+* If you are building Greenmask from source, make sure you have the "make" utility installed.
 
-* Clone greenmask repository `git clone git@github.com:GreenmaskIO/greenmask.git`
-* Run `make build`
-* You will find the binary called `greenmask` in the repository root
+## From Source:
+
+* Begin by cloning the Greenmask repository using the following command:
+
+```bash
+git clone git@github.com:GreenmaskIO/greenmask.git
+```
+
+* Once the repository is cloned, execute the following command to build Greenmask:
+
+```bash
+make build
+```
+
+* After completing the build process, you will find the binary named `greenmask` located in the root directory
+  of the repository.
 
 ## From GitHub binaries
 

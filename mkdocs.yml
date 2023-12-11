@@ -3,22 +3,22 @@ site_name: Greenmask
 # Theme
 theme:
   name: material
-#  custom_dir: docs/overrides
+  custom_dir: docs/overrides
   logo: assets/logo.png
   favicon: assets/logo.png
   features:
-#    - navigation.expand
+    #    - navigation.expand
     - announce.dismiss
     - content.code.annotate
     - content.code.copy
     - content.tooltips
     - navigation.tabs
-#    - navigation.top
-#    - navigation.tracking
+    #    - navigation.top
+    #    - navigation.tracking
     - search.highlight
     - search.share
     - search.suggest
-#    - toc.follow
+  #    - toc.follow
   palette:
     scheme: default
     primary: teal
@@ -47,29 +47,31 @@ nav:
       - Installation: installation.md
       - Commands: commands.md
       - Configuration: configuration.md
-      - Built-in transformers:
-          - Cmd: built_in_transformers/cmd.md
-          - Dict: built_in_transformers/dict.md
-          - Hash: built_in_transformers/hash.md
-          - Json: built_in_transformers/json.md
-          - Masking: built_in_transformers/masking.md
-          - NoiseDate: built_in_transformers/noise_date.md
-          - NoiseFloat: built_in_transformers/noise_float.md
-          - NoiseInt: built_in_transformers/noise_int.md
-          - RandomBool: built_in_transformers/random_bool.md
-          - RandomChoice: built_in_transformers/random_choice.md
-          - RandomDate: built_in_transformers/random_date.md
-          - RandomFloat: built_in_transformers/random_float.md
-          - RandomInt: built_in_transformers/random_int.md
-          - RandomString: built_in_transformers/random_string.md
-          - RandomUuid: built_in_transformers/random_uuid.md
-          - RegexpReplace: built_in_transformers/regexp_replace.md
-          - Replace: built_in_transformers/replace.md
-          - SetNull: built_in_transformers/set_null.md
-          - Template: built_in_transformers/template.md
-          - TemplateRecord: built_in_transformers/template_record.md
-      - Template functions and hints: template_functions.md
-      - Custom transformers: custom-transformers.md
+      - Transformers:
+          - Summary: transformers-summary.md
+          - Details:
+              - Cmd: built_in_transformers/cmd.md
+              - Dict: built_in_transformers/dict.md
+              - Hash: built_in_transformers/hash.md
+              - Json: built_in_transformers/json.md
+              - Masking: built_in_transformers/masking.md
+              - NoiseDate: built_in_transformers/noise_date.md
+              - NoiseFloat: built_in_transformers/noise_float.md
+              - NoiseInt: built_in_transformers/noise_int.md
+              - RandomBool: built_in_transformers/random_bool.md
+              - RandomChoice: built_in_transformers/random_choice.md
+              - RandomDate: built_in_transformers/random_date.md
+              - RandomFloat: built_in_transformers/random_float.md
+              - RandomInt: built_in_transformers/random_int.md
+              - RandomString: built_in_transformers/random_string.md
+              - RandomUuid: built_in_transformers/random_uuid.md
+              - RegexpReplace: built_in_transformers/regexp_replace.md
+              - Replace: built_in_transformers/replace.md
+              - SetNull: built_in_transformers/set_null.md
+              - Template: built_in_transformers/template.md
+              - TemplateRecord: built_in_transformers/template_record.md
+          - Template functions and hints: template_functions.md
+          - Custom transformers: custom-transformers.md
 
 repo_url: https://github.com/GreenmaskIO/greenmask
 repo_name: GreenmaskIO/greenmask
@@ -78,7 +80,7 @@ copyright: Copyright &copy; 2023 Greenmask
 
 
 extra:
-#    version:
+  #    version:
   #    provider: mike
   social:
     - icon: fontawesome/brands/x-twitter

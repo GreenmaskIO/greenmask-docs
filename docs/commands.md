@@ -1,16 +1,38 @@
 # Commands
 
-`greenmask --log-format=[json|text] --log-level=[debug|info|error] --config=config.yml 
-[dump|list-dumps|delete|list-transformers|restore|show-dump]`
+```shell
+greenmask \
+  --log-format=[json|text] \
+  --log-level=[debug|info|error] \
+  --config=config.yml \ 
+  [dump|list-dumps|delete|list-transformers|restore|show-dump]`
+```
 
-## common parameters
-* **--log-format** - format of log output [json|text]. Is not required. Default text.
-* **--log-level** - level of log output [debug|info|error]. Is not required. Default info.
-* **--config** - config file in yaml format. Is required.
-* **--help** - print help for greenmask
+You can use Greenmask with the following commands:
+
+* **dump** - Initiates the data dumping process.
+* **list-dumps** - Lists all available dumps stored in the system.
+* **delete** - Deletes a specific dump from the storage.
+* **list-transformers** - Displays a list of permissible transformers along with their documentation.
+* **restore** - Restores data to the target database, either by specifying a dumpId or using the latest available dump.
+* **show-dump** - Provides metadata information about a particular dump, offering insights into its structure and
+  attributes.
+
+For any of the commands mentioned above, you can include the following **common parameters**:
+
+* **--log-format** - Specifies the desired format for log output, which can be either `json` or `text`. This parameter
+  is optional, with the default format set to `text`.
+* **--log-level** - Sets the desired level for log output, which can be one of `debug`, `info`, or `error`. This
+  parameter is optional, with the default log level being `info`.
+* **--config** - Requires the specification of a configuration file in YAML format. This configuration file is
+  essential for Greenmask to operate correctly.
+* **--help** - Displays comprehensive help information for Greenmask, providing guidance on its usage and available
+  commands.
 
 ## validate
-Perform validation procedure and data diff of transformation
+
+The validate command allows you to perform a validation procedure and compare data transformations.
+Below is a list of all supported parameters for the validate command:
 
 ```text title="list of the all supported parameters"
 Usage:
@@ -24,12 +46,17 @@ Flags:
       --table strings     check tables dump only for specific tables
 ```
 
-The parameter `--table` may be written more than once. The table may be written either with schema name 
-(`public.tatble_name`) or without schema `table_name`. If there is more than one tables in different schemas an error
-will be thrown.
+You can use the `--table` parameter multiple times to specify the tables you want to check. Tables can be written with
+or
+without schema names (e.g., `public.table_name` or `table_name`). If you specify multiple tables from different schemas,
+an error will be raised.
 
+To initiate validation, you can use the following command:
 
-There is the validation call `greenmask --config=config.yml dump --validate`:
+```shell
+greenmask --config=config.yml dump --validate
+```
+
 ```text title="example of validation output"
 2023-10-30T11:19:28+02:00 WRN ValidationWarning={"meta":{"ColumnName":"scheduled_departure","ConstraintDef":"CHECK (scheduled_arrival \u003e scheduled_departure)","ConstraintName":"bookings","ConstraintSchema":"bookings","ConstraintType":"Check","ParameterName":"column","SchemaName":"bookings","TableName":"flights","TransformerName":"RandomDate"},"msg":"possible constraint violation: column has Check constraint","severity":"warning"}
 2023-10-30T11:19:28+02:00 WRN ValidationWarning={"meta":{"ColumnName":"scheduled_departure","ConstraintDef":"UNIQUE (flight_no, scheduled_departure)","ConstraintName":"bookings","ConstraintSchema":"bookings","ConstraintType":"Unique","ParameterName":"column","SchemaName":"bookings","TableName":"flights","TransformerName":"RandomDate"},"msg":"possible constraint violation: column is involved into Unique constraint","severity":"warning"}
@@ -45,8 +72,9 @@ There is the validation call `greenmask --config=config.yml dump --validate`:
 2023-10-30T11:19:28+02:00 WRN ValidationWarning={"meta":{"ColumnName":"range","ConstraintDef":"CHECK (range \u003e 0)","ConstraintName":"bookings","ConstraintSchema":"bookings","ConstraintType":"Check","ParameterName":"column","SchemaName":"bookings","TableName":"aircrafts_data","TransformerName":"NoiseInt"},"msg":"possible constraint violation: column has Check constraint","severity":"warning"}
 ```
 
-Each line contains nested json by key `ValidationWarning` with detailed information for determining the part of
-configuration and potential constraints that might be violated.
+The validation output will provide detailed information about potential constraint violations and schema issues.
+Each line contains nested JSON data under the key **ValidationWarning**, offering insights into the **affected part** of
+the configuration and **potential constraint violations**.
 
 ``` json title="pretty formatted validation warning"
 {
@@ -67,12 +95,12 @@ configuration and potential constraints that might be violated.
 ```
 { .annotate }
 
-1. Detailed metadata for determining the source of problems
-2. Column name
-3. Constraint definition
-4. Constraint name
-5. Constraint schema name
-6. Type of constraint. Can be one of the:
+1. Detailed Metadata: The validation output provides comprehensive metadata to pinpoint the source of problems.
+2. Column Name: Indicates the name of the affected column.
+3. Constraint Definition: Specifies the definition of the constraint that may be violated.
+4. Constraint Name: Identifies the name of the constraint that is potentially violated.
+5. Constraint Schema Name: Indicates the schema in which the constraint is defined.
+6. Type of Constraint: Represents the type of constraint and can be one of the following:
    ```
    * ForeignKey
    * Check
@@ -84,12 +112,14 @@ configuration and potential constraints that might be violated.
    * Exclusion
    * TriggerConstraint
    ```
-7. Table schema name
-8. Table name
-9. Transformer name
-10. Name of affected parameter. Usually, it is a column parameter
-11. Validation warning description
-12. Severity of validation warning. Can be one of
+7. Table Schema Name: Specifies the schema name of the affected table.
+8. Table Name: Identifies the name of the table where the problem occurs.
+9. Transformer Name: Indicates the name of the transformer responsible for the transformation.
+10. Name of Affected Parameter: Typically, this is the name of the column parameter that is relevant to the validation
+    warning.
+11. Validation Warning Description: Provides a detailed description of the validation warning and the reason behind it.
+12. Severity of Validation Warning: Indicates the severity level of the validation warning and can be one of the
+    following:
     ```
     * error
 	* warning
@@ -99,27 +129,41 @@ configuration and potential constraints that might be violated.
 
 !!! note
 
-    A validation warning with `severity=error` is fatal and dump operation cannot be performed until this warning is not 
-    solved
+    A validation warning with a severity level of **"error"** is considered critical and must be addressed before the dump 
+    operation can proceed. Failure to resolve such warnings will prevent the dump operation from being executed.
 
-
-An example of validation diff in vertical format (`--format=vertical`):
+Example of Validation Diff in Vertical Format (`--format=vertical`):
 
 ![img.png](assets/validate_vertical_diff.png)
 
-It is printed pretty in table format. The red column background means that the column is affected. The green value is
-the original value before transformation the red is the value after transformation. The result might be either in
-`horizontal` or `vertical` format
+The validation diff is presented in a neatly formatted table. In this table:
 
-An example of validation diff in horizontal format (`--format=horizontal`):
+* Columns that are affected by the transformation are highlighted with a red background.
+* The original values before the transformation are displayed in green.
+* The values after the transformation are shown in red.
+
+The result can be displayed in either **horizontal** or **vertical** format, making it easy to visualize and understand
+the
+differences between the original and transformed data.
+
+Example of Validation Diff in Horizontal Format (`--format=horizontal`):
 
 ![img.png](assets/validate_horizontal_diff.png)
 
-In horizontal format the first line is original the second is transformed. Colors behavior remains the same as
-in **vertical**.
+In horizontal format, the validation diff is **displayed with two lines for each entry**: the **first** line represents
+the **original data**, and the **second** line represents the **transformed data**. The color highlighting behavior
+remains consistent with the vertical format, where affected columns are highlighted in red, and original and transformed
+values are displayed in green and red, respectively. This format allows for a side-by-side comparison of the
+original and transformed data, making it easy to spot differences.
 
 ## dump
-Perform dump and validate and apply the transformation, put dumped data into defined storage
+
+The "dump" command performs the following steps:
+
+1. **Dumps the data** from the source database.
+2. **Validates** the data for potential issues.
+3. **Applies** the defined **transformations**.
+4. **Stores** the transformed data in **the specified storage** location.
 
 ``` text title="list of the all supported parameters"
 Usage:
@@ -177,67 +221,70 @@ Flags:
   -v, --verbose string                  verbose mode
 ```
 
-
 ## list-dumps
-List all dumps that are stored in the storage.
+
+The "list-dumps" command provides a list of all dumps stored in the storage. The list includes the following attributes:
+
+* **ID** - The unique identifier of the dump, used for operations like `restore`, `delete`, and `show-dump`.
+* **DATE** - The date when the snapshot was created.
+* **DATABASE** - The name of the database associated with the dump.
+* **SIZE** - The original size of the dump.
+* **COMPRESSED SIZE** - The size of the dump after compression.
+* **DURATION** - The duration of the dump procedure.
+* **TRANSFORMED** - Indicates whether the dump has been transformed.
+* **STATUS** - The status of the dump, which can be one of the following:
+    * done - The dump was completed successfully.
+    * unknown or failed - The dump might be in progress or failed. Failed dumps are not deleted automatically.
 
 Example of output:
 ![list_dumps_screen.png](assets/list_dumps_screen.png)
 
-Listing attributes:
-
-* **ID** - id of the dump used for performing operations `restore`, `delete`, `show-dump`
-* **DATE** - date snapshot date
-* **DATABASE** - name of database
-* **SIZE** - original size of dump
-* **COMPRESSED SIZE** - size of dump after compression
-* **DURATION** - duration of dump procedure
-* **TRANSFORMED** - is this dump transformed
-* **STATUS** - status of dump. There is only two statuses:
-  * done - dump completed successfully
-  * unknown or failed - dump might be in progress now or failed. Failed dumps are not deleted automatically
-
 ## list-transformers
-List of the allowed transformers either built-it or custom. It might be helpful for searching for an appropriate
-transformer for your transformation.
+
+The **list-transformers** command provides a list of all the allowed transformers, including both built-in and custom
+transformers. This list can be helpful for searching for an appropriate transformer for your data transformation needs.
 
 Parameters:
 
-* **--format** - selection of output format. There might be two options `text` or `json`.
-  Text returns formatted table column-oriented. The default setting is text.
+* **--format** - Allows the selection of the output format. There are two options available: `text` or `json`. The
+  default setting is `text`.
 
 Example of output:
 
-![list_transformers_screen.png](assets/list_transformers_screen_1.png)
-
 ![list_transformers_screen.png](assets/list_transformers_screen_2.png)
 
-Listing attributes:
+When using the "list-transformers" command, you'll receive a list of available transformers, each with specific
+attributes to help you understand and configure them effectively. Here are the key attributes for each transformer:
 
-* **name** of transformers:
-* **description** - brief description of transformer
-* **parameters** - list of transformer parameters
+* **Name**: The name of the transformer.
+* **Description**: A brief description of what the transformer does.
+* **Parameters**: A list of transformer parameters, each with its own set of attributes.
 
-Each parameter has the next attributes:
+For each parameter of a transformer, you'll find the following attributes:
 
-* **description** - brief description of parameter
-* **required** - flag shows that parameters are required for providing
-* **link_parameter** - shows that the value of the parameter will be encoded using a parameter type encoder. For instance, we
-  have a parameter with the name "column" and we have a parameter "start" that is linked to the "column" parameter. Once
-  the transformer is initialized the value of "start" will be encoded according to the "column" type
-* **cast_db_type** - the value will be encoded according to the database type. For instance, in INTERVAL you have to
-  provide interval value in Postgresql format.
-* **default_value** - default value of a parameter if not provided.
-* **column_properties** - if a parameter is the name of a column, then it contains column properties, such as:
-  * **nullable** - transformer may produce NULL values, that would violate the NOT NULL constraint
-  * **unique** - transformer values are unique for each call. If true shows that the transformer cannot violate the UNIQUE constraint
-  * **affected** - is column affected in transformation. If not the value might be needed for transforming another column
-  * **allowed_types** - A list of types with this parameter can work
-  * **skip_original_data** - though this column is going to be transformed the original value does not make sense
-  * **skip_on_null** - skip transformation on null input. This means that interaction with the transformer is not needed if the
-    column value is NULL
+* **description** - A brief description of the parameter's purpose.
+* **required** - A flag indicating whether the parameter is required when configuring the transformer.
+* **link_parameter** - Specifies whether the value of the parameter will be encoded using a specific parameter type
+  encoder. For example, if a parameter named "column" is linked to another parameter "start," the "start"
+  parameter's value will be encoded according to the "column" type when the transformer is initialized.
+* **cast_db_type** - Indicates that the value should be encoded according to the database type. For instance, when
+  dealing with the INTERVAL data type, you must provide the interval value in PostgreSQL format.
+* **default_value** - The default value assigned to the parameter if it's not provided during configuration.
+* **column_properties** - If a parameter represents the name of a column, it may contain additional properties,
+  including:
+    * **nullable** - Indicates whether the transformer may produce NULL values, potentially violating the NOT NULL
+      constraint.
+    * **unique** - Specifies whether the transformer guarantees unique values for each call. If set to true, it means
+      that the transformer cannot produce duplicate values, ensuring compliance with the UNIQUE constraint.
+    * **affected** - Indicates whether the column is affected during the transformation process. If not affected, the
+      column's value might still be required for transforming another column.
+    * **allowed_types** - A list of data types that are compatible with this parameter.
+    * **skip_original_data** - Specifies whether the original value of the column, before transformation, is relevant
+      for the transformation process.
+    * **skip_on_null** - Indicates whether the transformer should skip the transformation when the input column value is
+      NULL. If the column value is NULL, interaction with the transformer is unnecessary.
 
-The json call `greenmask --config=config.yml list-transformers --foramt=json` has the same attributes
+The json call `greenmask --config=config.yml list-transformers --format=json` has the same attributes
 
 ``` json title="json format of output"
 [
@@ -283,15 +330,31 @@ The json call `greenmask --config=config.yml list-transformers --foramt=json` ha
 ]
 ```
 
+In this JSON format output example, you can see the structure of transformer attributes, including the 
+transformer's name, description, and whether it's a custom transformer. Additionally, each transformer has a list of 
+parameters, each with its own attributes, such as name, description, whether it's required, and column properties if 
+applicable. These attributes help you understand the behavior and configuration options of each transformer.
+
 !!! warning
 
     The default value in json format is base64 encoded. This might be fixed later
 
 ## restore
-Perform dump restoration with the provided dump ID `greenmask --config=config.yml restore 1695763318739`. The latest completed dump might be
-restored with "latest" value provided `greenmask restore latest`.
 
-`restore` command has the same parameters and environment variable as pg_restore
+To perform a dump restoration with the provided dump ID, you can use the following command:
+
+```shell
+greenmask --config=config.yml restore 1695763318739
+```
+
+Alternatively, to restore the latest completed dump, you can use the following command:
+
+```shell
+greenmask --config=config.yml restore latest
+```
+
+Please note that the restore command shares the same parameters and environment variables as `pg_restore`,
+allowing you to configure the restoration process as needed.
 
 ``` text title=""
 Flags:
@@ -335,15 +398,20 @@ Flags:
 
 ```
 
-!!! warning
-
-    Greenmsk is a beta version with early access. Not all pg_restore parameters are available and working properly. 
-    The details will be clarified later.
-
 ## show-dump
 
-Shows metadata info of the dump. This command prints all objects and data that might be restored. 
-The call `greenmask --config=config.yml show-dump dumpID` show the same as `pg_restore -l`:
+This command provides details about all objects and data that can be restored, similar to the `pg_restore -l` command
+in PostgreSQL. It helps you inspect the contents of the dump before performing the actual restoration.
+
+Parameters:
+
+* **--format** - format of printing. Can be "text" or "json"
+
+To display metadata information about a dump, you can use the following command:
+
+```shell
+greenmask --config=config.yml show-dump dumpID
+```
 
 ```text title="The example of text output"
 ;
@@ -380,17 +448,13 @@ The call `greenmask --config=config.yml show-dump dumpID` show the same as `pg_r
 3295; 2606 25068 FK CONSTRAINT bookings flights flights_departure_airport_fkey postgres
 ```
 
-The command show-dump introduces format option:
-
-* **--format** - format of printing. Can be "text" or "json"
-
-
 !!! note
 
-    Json format is more detailed in comparison with the text. The text uses for backward compatibility and for providing 
-    a restoration list for `pg_restore -L listfile`, whereas "json" prints the whole metadata of the dump including applied 
-    transformers with parameters. "json" format is useful for dump introspection.
-
+    Please note that the `json` format provides more detailed information compared to the `text` format. The "text" 
+    format is primarily used for backward compatibility and for generating a restoration list that can be used with 
+    `pg_restore -L listfile`. On the other hand, the `json` format provides comprehensive metadata about the dump,
+    including information about the applied transformers and their parameters. The "json" format is especially useful 
+    for detailed dump introspection.
 
 ``` json title="The example of json output" linenums="1"
 {
@@ -663,19 +727,20 @@ The command show-dump introduces format option:
 ```
 { .annotate }
 
-
-1. The date when the backup has been started. Also shows a snapshot date
-2. The date when the backup has been completed
-3. Original size in bytes
-4. Compressed size in bytes
-5. List of the tables with the applied transformers
-6. Table schema name
-7. Table name
-8. Overridden custom query
-9. List of applied transformers
-10. Name of transformer
-11. Provided parameters
-12. Map of overridden column types
-13. TOC file header. Introduce the same information in `--format=test` in the previous snippet
-14. The list of restoration entries. introduce the same information as `--format=test` in the previous snippet
+1. The date when the backup has been initiated, also indicating the snapshot date.
+2. The date when the backup process was successfully completed.
+3. The original size of the backup in bytes.
+4. The size of the backup after compression in bytes.
+5. A list of tables that underwent transformation during the backup.
+6. The schema name of the table.
+7. The name of the table.
+8. Custom query override, if applicable.
+9. A list of transformers that were applied during the backup.
+10. The name of the transformer.
+11. The parameters provided for the transformer.
+12. A mapping of overridden column types.
+13. The header information in the TOC (Table of Contents) file. This provides the same details as the `--format=text`
+    output in the previous snippet.
+14. The list of restoration entries. This offers the same information as the `--format=text` output in the previous
+    snippet.
 

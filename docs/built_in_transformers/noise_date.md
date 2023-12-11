@@ -1,23 +1,35 @@
-### Description
+Add or subtract a random duration in the provided `ratio` interval to the original date value.
 
-Add some random value (shift value) in the provided interval. The value might be shifted either to before this
-date or after.
+## Parameters
 
-Parameters:
+| Name     | Description                                                                                                                                     | Default | Required | Supported DB types           |
+|----------|-------------------------------------------------------------------------------------------------------------------------------------------------|---------|----------|------------------------------|
+| column   | The name of the column whose value will be affected                                                                                             |         | Yes      | date, timestamp, timestamptz |
+| ratio    | The maximum random duration for noise. The value must be in PostgreSQL interval format. Example: 1 year 2 mons 3 day 04:05:06.07                |         | Yes      | -                            |
+| truncate | Truncate date to the specified part (`nano`, `second`, `minute`, `hour`, `day`, `month`, `year`). Truncate operation is not applied by default. |         | No       | -                            |
 
-| Name     | Description                                                                                                                                                                                                   | Default | Required | Supported DB types           |
-|----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|----------|------------------------------|
-| column   | name of column which value is going to be affected                                                                                                                                                            |         | Yes      | date, timestamp, timestamptz |
-| ratio    | max random duration for noise. The value has [PostgreSQL interval format](https://www.postgresql.org/docs/current/datatype-datetime.html#DATATYPE-INTERVAL-INPUT). Example: `1 year 1 mons 1 day 01:01:01.01` |         | Yes      | -                            |
-| truncate | truncate date till the part (_year_, _month_, _day_, _hour_, _second_, _millisecond_, _microsecond_, _nanosecond_). Truncate operation is not applied by default.                                             |         | No       | -                            |
+## Description
+
+The `NoiseDate` transformer generates a random duration within the specified `ratio` parameter and adds it to or
+subtracts
+it from the original date value. The `ratio` parameter must be written in
+the [PostgreSQL interval format](https://www.postgresql.org/docs/current/datatype-datetime.html#DATATYPE-INTERVAL-INPUT).
+You can also perform date truncation up to the specified part of the date provided in the `truncate` parameter.
+
+## Examples
+
+### A. Adding Noise to the Modified Date
+
+In this example, the original `timestamp` value of `modifieddate` will be noised up to `1 year 2 months 3 days 4 hours 5
+minutes 6 seconds and 7 milliseconds` with truncation up to the `nano` part.
 
 ``` yaml title="NoiseDate transformer example"
-- schema: "public"
-  name: "order"
+- schema: "humanresources"
+  name: "jobcandidate"
   transformers:
     - name: "NoiseDate"
       params:
-        column: "created_at"
-        ratio: "1 year 1 mons 1 day 01:01:01.01"
-        truncate: "microsecond"
+        column: "modifieddate"
+        ratio: "1 year 2 mons 3 day 04:05:06.07"
+        truncate: "nano"
 ```
