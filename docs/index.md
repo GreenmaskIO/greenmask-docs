@@ -55,4 +55,4 @@ obfuscation process remains fresh, predictable, and transparent.
 * Email: **support@greenmask.io**
 * [Twitter](https://twitter.com/GreenmaskIO)
 * [Telegram](https://t.me/greenmask_community)
-* [Discord](https://discord.gg/97AKHdGD)
+* [Discord](https://discord.gg/tAJegUKSTB)
