@@ -70,6 +70,7 @@ nav:
               - SetNull: built_in_transformers/set_null.md
               - Template: built_in_transformers/template.md
               - TemplateRecord: built_in_transformers/template_record.md
+              - RealAddress: built_in_transformers/real_address.md
           - Template functions and hints: template_functions.md
           - Custom transformers: custom-transformers.md
 
