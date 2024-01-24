@@ -65,11 +65,46 @@ nav:
               - RandomInt: built_in_transformers/random_int.md
               - RandomString: built_in_transformers/random_string.md
               - RandomUuid: built_in_transformers/random_uuid.md
+              - RandomLatitude: built_in_transformers/random_latitude.md
+              - RandomLongitude: built_in_transformers/random_longitude.md
+              - RandomUnixTime: built_in_transformers/random_unix_time.md
+              - RandomMonthName: built_in_transformers/random_month_name.md
+              - RandomYearString: built_in_transformers/random_year_string.md
+              - RandomDayOfWeek: built_in_transformers/random_day_of_week.md
+              - RandomDayOfMonth: built_in_transformers/random_day_of_month.md
+              - RandomCentury: built_in_transformers/random_century.md
+              - RandomTimezone: built_in_transformers/random_timezone.md
+              - RandomEmail: built_in_transformers/random_email.md
+              - RandomMacAddress: built_in_transformers/random_mac_address.md
+              - RandomDomainName: built_in_transformers/random_domain_name.md
+              - RandomUrl: built_in_transformers/random_url.md
+              - RandomUsername: built_in_transformers/random_username.md
+              - RandomIPv4: built_in_transformers/random_ipv4.md
+              - RandomIPv6: built_in_transformers/random_ipv6.md
+              - RandomPassword: built_in_transformers/random_password.md
+              - RandomWord: built_in_transformers/random_word.md
+              - RandomSentence: built_in_transformers/random_sentence.md
+              - RandomParagraph: built_in_transformers/random_paragraph.md
+              - RandomCCType: built_in_transformers/random_cc_type.md
+              - RandomCCNumber: built_in_transformers/random_cc_number.md
+              - RandomCurrency: built_in_transformers/random_currency.md
+              - RandomAmountWithCurrency: built_in_transformers/random_amount_with_currency.md
+              - RandomTitleMale: built_in_transformers/random_title_male.md
+              - RandomTitleFemale: built_in_transformers/random_title_female.md
+              - RandomFirstName: built_in_transformers/random_first_name.md
+              - RandomFirstNameMale: built_in_transformers/random_first_name_male.md
+              - RandomFirstNameFemale: built_in_transformers/random_first_name_female.md
+              - RandomPhoneNumber: built_in_transformers/random_phone_number.md
+              - RandomTollFreePhoneNumber: built_in_transformers/random_toll_free_phone_number.md
+              - RandomE164PhoneNumber: built_in_transformers/random_e164_phone_number.md
+              - RandomLastName: built_in_transformers/random_last_name.md
+              - RandomName: built_in_transformers/random_name.md
               - RegexpReplace: built_in_transformers/regexp_replace.md
               - Replace: built_in_transformers/replace.md
               - SetNull: built_in_transformers/set_null.md
               - Template: built_in_transformers/template.md
               - TemplateRecord: built_in_transformers/template_record.md
+              - RealAddress: built_in_transformers/real_address.md
           - Template functions and hints: template_functions.md
           - Custom transformers: custom-transformers.md
 
