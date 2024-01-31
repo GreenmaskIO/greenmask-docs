@@ -108,6 +108,7 @@ nav:
           - Template functions and hints: template_functions.md
           - Custom transformers: custom-transformers.md
   - Release notes:
+      - Greenmask 0.1.2: release_notes/greenmask_0_1_2.md
       - Greenmask 0.1.1: release_notes/greenmask_0_1_1.md
       - Greenmask 0.1.0: release_notes/greenmask_0_1_0.md
       - Greenmask 0.1.0 Beta: release_notes/greenmask_0_1_0_beta.md

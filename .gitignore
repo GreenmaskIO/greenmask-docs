@@ -2,3 +2,5 @@ venv
 config.yml
 .cache
 .idea
+.DS_Store
+site/
